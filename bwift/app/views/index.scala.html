@@ -1,5 +1,29 @@
 @()
 
-@main("Welcome to Play") {
-  <h1>Welcome to Play!</h1>
+@main("Welcome to Bwift") {
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Menu</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Bwift</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <h1>Balance: 10000</h1>
+  <a><button type="button" class="btn btn-primary" id="add-contact-button">New transaction</button></a><br/>
+
+  <table cellpadding="0" cellspacing="0" border="0" id="employees-table" width="100%" class="table table-striped">
+    <thead><th>Destination</th><th>Amount</th><th>Bank</th><th>Time</th></thead>
+    <tbody>
+    </tbody>
+  </table>
+
+</div>
 }
