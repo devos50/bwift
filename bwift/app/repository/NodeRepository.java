@@ -16,8 +16,8 @@ public class NodeRepository {
         // Exists only to defeat instantiation.
     }
 
-    private void addNode(String name, boolean isCompany, String ipAddress, int port) {
-        Node newNode = new Node(name, isCompany, ipAddress, port);
+    private void addNode(String name, boolean isCompany, String identificationCode, String ipAddress, int port) {
+        Node newNode = new Node(name, isCompany, identificationCode, ipAddress, port);
         newNode.save();
     }
 
@@ -25,10 +25,11 @@ public class NodeRepository {
         return Node.find.all();
     }
 
-    public Node getNode(String name) {
+    public Node getBICNode(String bic) {
+        // return a node based on the bank identification code (used to lookup banks)
         List<Node> nodes = this.getNodes();
         for(Node bank : nodes) {
-            if(bank.getName().equals(name)) {
+            if(bank.getIdentificationCode().equals(bic) && !bank.isCompany()) {
                 return bank;
             }
         }
@@ -41,9 +42,9 @@ public class NodeRepository {
 
             // create some banks
             if(Node.find.all().size() == 0) {
-                instance.addNode("Maersk", true, "127.0.0.1", 9000);
-                instance.addNode("Nordea", false, "127.0.0.1", 9001);
-                instance.addNode("Company", true, "127.0.0.1", 9002);
+                instance.addNode("Maersk", true, "", "127.0.0.1", 9000);
+                instance.addNode("Nordea", false, "NORD", "127.0.0.1", 9001);
+                instance.addNode("Company", true, "", "127.0.0.1", 9002);
             }
         }
         return instance;

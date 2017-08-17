@@ -17,18 +17,28 @@ public class Node extends Model {
     @Id
     private String name;
     private boolean isCompany; // true iff this node is a company, else false
+    private String identificationCode;
     private String ipAddress;
     private int port;
 
-    public Node(String name, boolean isCompany, String ipAddress, int port) {
+    public Node(String name, boolean isCompany, String identificationCode, String ipAddress, int port) {
         this.name = name;
         this.isCompany = isCompany;
+        this.identificationCode = identificationCode;
         this.ipAddress = ipAddress;
         this.port = port;
     }
 
     public String getName() {
         return this.name;
+    }
+
+    public boolean isCompany() {
+        return this.isCompany;
+    }
+
+    public String getIdentificationCode() {
+        return this.identificationCode;
     }
 
     public String getIpAddress() {
@@ -43,6 +53,7 @@ public class Node extends Model {
         ObjectNode json = Json.newObject();
         json.put("name", this.name);
         json.put("is_company", this.isCompany);
+        json.put("identification_code", this.identificationCode);
         json.put("ip_address", this.ipAddress);
         json.put("port", this.port);
         return json;
