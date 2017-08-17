@@ -7,17 +7,19 @@ import models.Message;
 import models.Node;
 import models.Transaction;
 import play.Logger;
-import play.data.DynamicForm;
 import play.data.FormFactory;
 import play.libs.Json;
 import play.libs.ws.WSClient;
-import play.mvc.*;
+import play.libs.ws.WSResponse;
+import play.mvc.Controller;
+import play.mvc.Result;
 import repository.NodeRepository;
 import repository.PendingMessageRepository;
 import repository.PendingTransactionRepository;
 
 import javax.inject.Inject;
 import java.util.Objects;
+import java.util.concurrent.CompletionStage;
 
 /**
  * This controller contains an action to handle HTTP requests
@@ -249,6 +251,19 @@ public class HomeController extends Controller {
         ObjectNode result = Json.newObject();
         result.put("success", true);
         return ok(result);
+    }
+
+    //ADDED TENDERMINT API
+    public CompletionStage<String> appendTxBC(String value) {
+        String tendermintURL = "http://46.101.26.177:46657/broadcast_tx_sync?tx=\"" + value + "\"";
+        CompletionStage<WSResponse> jsonReponse = ws.url(tendermintURL).setContentType("application/x-www-form-urlencoded").get();
+        return jsonReponse.thenApply(response -> response.asJson().get("error").asText());
+    }
+
+    public CompletionStage<JsonNode> queryTxBC(String value) {
+        String tendermintURL = "http://46.101.26.177:46657/abci_query?path=\"\"&data=\"" + value + "\"&prove=false";
+        CompletionStage<WSResponse> jsonReponse = ws.url(tendermintURL).setContentType("application/x-www-form-urlencoded").get();
+        return jsonReponse.thenApply(response -> Json.toJson(response.asJson().get("result").asText()));
     }
 
 }
