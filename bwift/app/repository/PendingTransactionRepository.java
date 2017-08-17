@@ -1,6 +1,7 @@
 package repository;
 
 import models.Transaction;
+import play.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,14 +19,17 @@ public class PendingTransactionRepository {
     }
 
     public void addPendingTransaction(Transaction tx) {
+        Logger.debug("Adding pending transaction: " + tx.getTxid());
         pendingTransactions.put(tx.getTxid(), tx);
     }
 
     public void removePendingTransaction(String txid) {
+        Logger.debug("Removing pending transaction: " + txid);
         pendingTransactions.remove(txid);
     }
 
     public Transaction getPendingTransaction(String txid) {
+        Logger.debug("Looking for pending transaction: " + txid);
         if(!pendingTransactions.containsKey(txid)) {
             return null;
         }

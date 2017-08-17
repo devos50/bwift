@@ -19,6 +19,7 @@ public class Message {
     This class represents a message in the system.
      */
     private String id;
+    private String txid;
     private String type;
     private int step;
     private ObjectNode payload;
@@ -36,15 +37,17 @@ public class Message {
         return sb.toString();
     }
 
-    public Message(String type, int step, ObjectNode payload) {
+    public Message(String txid, String type, int step, ObjectNode payload) {
         this.id = this.generateId();
+        this.txid = txid;
         this.type = type;
         this.step = step;
         this.payload = payload;
     }
 
-    public Message(String id, String type, int step, ObjectNode payload) {
+    public Message(String id, String txid, String type, int step, ObjectNode payload) {
         this.id = id;
+        this.txid = txid;
         this.type = type;
         this.step = step;
         this.payload = payload;
@@ -52,6 +55,10 @@ public class Message {
 
     public String getId() {
         return this.id;
+    }
+
+    public String getTxid() {
+        return this.txid;
     }
 
     public String getType() {
@@ -81,6 +88,7 @@ public class Message {
     public JsonNode getJsonRepresentation() {
         ObjectNode json = Json.newObject();
         json.put("id", this.id);
+        json.put("txid", this.txid);
         json.put("type", this.type);
         json.put("step", this.step);
         json.putObject("payload").setAll(this.payload);

@@ -78,11 +78,12 @@ public class HomeController extends Controller {
         }
 
         // create a new transaction and add it to the pending transactions
-        Transaction tx = new Transaction();
+        Transaction tx = new Transaction(sourceAccount, destinationAccount, amount, currency);
+        tx.save();
         PendingTransactionRepository.getInstance().addPendingTransaction(tx);
 
         // send a start_transaction message to the final company
-        Message start_tx_message = new Message("start_transaction", -1, json.deepCopy());
+        Message start_tx_message = new Message(tx.getTxid(), "start_transaction", -1, json.deepCopy());
         start_tx_message.sign1();
         PendingMessageRepository.getInstance().addPendingMessage(start_tx_message);
 
@@ -118,8 +119,11 @@ public class HomeController extends Controller {
     }
 
     private Result handleEndTransaction(Message msg) {
-        // TODO remove from pending transaction repo
-        // PendingTransactionRepository.getInstance().removePendingTransaction(msg.getId());
+        Transaction tx = PendingTransactionRepository.getInstance().getPendingTransaction(msg.getTxid());
+        tx.setComplete();
+        tx.save();
+        PendingTransactionRepository.getInstance().removePendingTransaction(msg.getTxid());
+
         ObjectNode result = Json.newObject();
         result.put("success", true);
         return ok(result);
@@ -135,7 +139,7 @@ public class HomeController extends Controller {
         int step = json.get("step").asInt();
         ObjectNode payload = json.get("payload").deepCopy();
         Logger.info("Received incoming message (type: " + msgType + ")");
-        Message newMessage = new Message(json.get("id").asText(), msgType, step, payload);
+        Message newMessage = new Message(json.get("id").asText(), json.get("txid").asText(), msgType, step, payload);
         newMessage.sign2();
 
         Result result;
@@ -201,7 +205,7 @@ public class HomeController extends Controller {
                 return this.error("cannot find bank");
             }
 
-            Message newMsg = new Message("first_step", 1, msg.getPayload());
+            Message newMsg = new Message(msg.getTxid(), "first_step", 1, msg.getPayload());
             PendingMessageRepository.getInstance().addPendingMessage(newMsg);
 
             String url = "http://" + bank.getIpAddress() + ":" + bank.getPort() + "/msg";
@@ -215,7 +219,7 @@ public class HomeController extends Controller {
                 return this.error("cannot find bank");
             }
 
-            Message newMsg = new Message("second_step", 2, msg.getPayload());
+            Message newMsg = new Message(msg.getTxid(), "second_step", 2, msg.getPayload());
             PendingMessageRepository.getInstance().addPendingMessage(newMsg);
 
             ws.url("http://" + bank.getIpAddress() + ":" + bank.getPort() + "/msg").post(newMsg.getJsonRepresentation());
@@ -227,7 +231,7 @@ public class HomeController extends Controller {
                 return this.error("cannot find company");
             }
 
-            Message newMsg = new Message("third_step", 4, msg.getPayload());
+            Message newMsg = new Message(msg.getTxid(), "third_step", 4, msg.getPayload());
             PendingMessageRepository.getInstance().addPendingMessage(newMsg);
 
             ws.url("http://" + company.getIpAddress() + ":" + company.getPort() + "/msg").post(newMsg.getJsonRepresentation());
@@ -239,7 +243,7 @@ public class HomeController extends Controller {
                 return this.error("cannot find company");
             }
 
-            Message newMsg = new Message("end_transaction", -1, msg.getPayload());
+            Message newMsg = new Message(msg.getTxid(), "end_transaction", -1, msg.getPayload());
             PendingMessageRepository.getInstance().addPendingMessage(newMsg);
 
             ws.url("http://" + company.getIpAddress() + ":" + company.getPort() + "/msg").post(newMsg.getJsonRepresentation());
