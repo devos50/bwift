@@ -2,12 +2,12 @@ package controllers;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import play.data.DynamicForm;
+import models.Node;
 import play.data.FormFactory;
 import play.libs.Json;
 import play.libs.ws.WSClient;
 import play.mvc.*;
-import repository.BankRepository;
+import repository.NodeRepository;
 
 import javax.inject.Inject;
 
@@ -31,12 +31,12 @@ public class HomeController extends Controller {
         return ok(views.html.index.render());
     }
 
-    public Result getAccounts() {
+    public Result getNodes() {
         ObjectNode result = Json.newObject();
 
-        ArrayNode array = result.putArray("accounts");
-        for(BankAccount account : BankAccountRepository.getInstance().getAccounts()) {
-            array.add(account.getJsonRepresentation());
+        ArrayNode array = result.putArray("nodes");
+        for(Node node : NodeRepository.getInstance().getNodes()) {
+            array.add(node.getJsonRepresentation());
         }
 
         return ok(result);
