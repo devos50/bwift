@@ -7,6 +7,7 @@ import models.Message;
 import models.Node;
 import models.Transaction;
 import play.Logger;
+import play.data.DynamicForm;
 import play.data.FormFactory;
 import play.libs.Json;
 import play.libs.ws.WSClient;
@@ -73,14 +74,25 @@ public class HomeController extends Controller {
 
     public Result createTransaction() {
         Logger.info("Creating a new transaction");
-        JsonNode json = request().body().asJson();
-        String sourceAccount = json.get("source").asText();
-        String destinationAccount = json.get("destination").asText();
-        double amount = Double.parseDouble(json.get("amount").asText());
-        String currency = json.get("currency").asText();
-        int valueDate = Integer.parseInt(json.get("value_date").asText());
-        String customerName = json.get("customer_name").asText();
-        String customerAddress = json.get("customer_address").asText();
+
+        DynamicForm dynamicForm = formFactory.form().bindFromRequest();
+
+        String sourceAccount = dynamicForm.get("source");
+        String destinationAccount = dynamicForm.get("destination");
+        double amount = Double.parseDouble(dynamicForm.get("amount"));
+        String currency = dynamicForm.get("currency");
+        int valueDate = Integer.parseInt(dynamicForm.get("value_date"));
+        String customerName = dynamicForm.get("customer_name");
+        String customerAddress = dynamicForm.get("customer_address");
+
+        ObjectNode json = Json.newObject();
+        json.put("source", sourceAccount);
+        json.put("destination", destinationAccount);
+        json.put("amount", amount);
+        json.put("currency", currency);
+        json.put("value_date", valueDate);
+        json.put("customer_name", customerName);
+        json.put("customer_address", customerAddress);
 
         // determine to which company we need to send the start_transaction message
         Node companyNode = NodeRepository.getInstance().getCompanyNode(destinationAccount);
@@ -94,7 +106,7 @@ public class HomeController extends Controller {
         PendingTransactionRepository.getInstance().addPendingTransaction(tx);
 
         // send a start_transaction message to the final company
-        Message start_tx_message = new Message(tx.getTxid(), "start_transaction", -1, json.deepCopy());
+        Message start_tx_message = new Message(tx.getTxid(), "start_transaction", -1, json);
         start_tx_message.sign1();
         PendingMessageRepository.getInstance().addPendingMessage(start_tx_message);
 
