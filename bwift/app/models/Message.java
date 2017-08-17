@@ -2,8 +2,16 @@ package models;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import play.Logger;
 import play.libs.Json;
+import util.GenerateKeys;
+import util.HexUtil;
 
+import java.math.BigInteger;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.Signature;
+import java.security.SignatureException;
 import java.util.Random;
 
 public class Message {
@@ -80,12 +88,34 @@ public class Message {
     }
 
     public void sign1() {
-        // sign the message as the first party
-        this.signature1 = "00000";
+        try {
+            Signature rsa = Signature.getInstance("SHA1withRSA");
+            rsa.initSign(GenerateKeys.getPrivateKey());
+            rsa.update(this.getJsonRepresentation().toString().getBytes());
+            this.signature1 = HexUtil.bytesToHex(rsa.sign());
+            Logger.debug("Party 1 signing message with type " + this.getType() + ": " + this.signature1);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (SignatureException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        }
     }
 
     public void sign2() {
-        // sign the message as the first party
-        this.signature2 = "00000";
+        try {
+            Signature rsa = Signature.getInstance("SHA1withRSA");
+            rsa.initSign(GenerateKeys.getPrivateKey());
+            rsa.update(this.getJsonRepresentation().toString().getBytes());
+            this.signature2 = HexUtil.bytesToHex(rsa.sign());
+            Logger.debug("Party 2 signing message with type " + this.getType() + ": " + this.signature2);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (SignatureException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        }
     }
 }
