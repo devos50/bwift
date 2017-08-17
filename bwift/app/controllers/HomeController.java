@@ -81,7 +81,7 @@ public class HomeController extends Controller {
         String destinationAccount = dynamicForm.get("destination");
         double amount = Double.parseDouble(dynamicForm.get("amount"));
         String currency = dynamicForm.get("currency");
-        int valueDate = Integer.parseInt(dynamicForm.get("value_date"));
+        int valueDate = 1234; //Integer.parseInt(dynamicForm.get("value_date"));
         String customerName = dynamicForm.get("customer_name");
         String customerAddress = dynamicForm.get("customer_address");
 
@@ -112,9 +112,7 @@ public class HomeController extends Controller {
 
         ws.url("http://localhost:9000/msg").post(start_tx_message.getJsonRepresentation());
 
-        ObjectNode result = Json.newObject();
-        result.put("success", true);
-        return ok(result);
+        return redirect("http://localhost:9000?success=true");
     }
 
     private Result handleStartTransaction(Message msg) {

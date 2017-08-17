@@ -344,35 +344,35 @@
             </div>
             <!-- /.box-header -->
             <!-- form start -->
-            <form role="form">
+            <form role="form" action="/transactions" method="POST">
               <div class="box-body">
                   <div class="form-group">
-                      <label>Select a Bank Account to Transfer</label>
-                      <select class="form-control">
-                          <option>Nordea - Dollars</option>
+                      <label>Select a source bank account</label>
+                      <select class="form-control" name="source">
+                          <option value="NL11NORD111111111">Nordea - Dollars</option>
 
                       </select>
                   </div>
                   <div class="form-group">
-                      <label>Select Recipient Bank Account </label>
-                      <select class="form-control">
-                          <option>Company's Bank Account</option>
+                      <label>Select the bank account of the recipient</label>
+                      <select class="form-control" name="destination">
+                          <option value="NL22NORD222222222">Company's Bank Account</option>
 
                       </select>
                       <br>
                   </div>
                       <div class="input-group">
                           <span class="input-group-addon">$</span>
-                          <input type="text" class="form-control" placeholder="Amount">
+                          <input type="text" class="form-control" placeholder="Amount" name="amount">
                           <span class="input-group-addon"></span>
                       </div>
                   <br>
                   <div class="form-group">
                       <label>Currency </label>
                       <select class="form-control">
-                          <option>USD</option>
-                          <option>EUR</option>
-                          <option>RMB</option>
+                          <option value="USD">USD</option>
+                          <option value="EUR">EUR</option>
+                          <option value="RMB">RMB</option>
 
                       </select>
                       <br>
@@ -385,17 +385,17 @@
                           <div class="input-group-addon">
                               <i class="fa fa-calendar"></i>
                           </div>
-                          <input type="text" class="form-control pull-right" id="datepicker">
+                          <input type="text" class="form-control pull-right" id="datepicker" name="value_date">
                       </div>
                       <!-- /.input group -->
                   </div>
                   <br>
-                  <label>Name of Customer</label>
-                  <input class="form-control" type="text" placeholder="">
+                  <label>Name of the customer</label>
+                  <input class="form-control" type="text" placeholder="" name="customer_name">
                   <br>
                   <br>
-                  <label>Address of Customer</label>
-                  <input class="form-control" type="text" placeholder="">
+                  <label>Address of the customer</label>
+                  <input class="form-control" type="text" placeholder="" name="customer_address">
                   <br>
 
 
@@ -403,7 +403,7 @@
               <!-- /.box-body -->
 
               <div class="box-footer">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <input type="submit" value="Submit" class="btn btn-primary" />
               </div>
             </form>
           </div>
