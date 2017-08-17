@@ -6,6 +6,8 @@
 GET     /                           controllers.HomeController.index
 GET     /nodes                   controllers.HomeController.getNodes
 POST    /transactions            controllers.HomeController.createTransaction
+POST    /msg                     controllers.HomeController.processMessage
+POST    /ack                     controllers.HomeController.processAck
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

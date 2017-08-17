@@ -12,9 +12,11 @@ import play.libs.Json;
 import play.libs.ws.WSClient;
 import play.mvc.*;
 import repository.NodeRepository;
+import repository.PendingMessageRepository;
 import repository.PendingTransactionRepository;
 
 import javax.inject.Inject;
+import java.util.Objects;
 
 /**
  * This controller contains an action to handle HTTP requests
@@ -74,7 +76,61 @@ public class HomeController extends Controller {
         Message start_tx_message = new Message();
         // TODO add more data to it
 
-        ws.url("http://localhost:9000").post(start_tx_message.getJsonRepresentation());
+        ws.url("http://localhost:9000/msg").post(start_tx_message.getJsonRepresentation());
+
+        ObjectNode result = Json.newObject();
+        result.put("success", true);
+        return ok(result);
+    }
+
+    public Result handleStartTransaction(JsonNode json) {
+
+
+        ObjectNode result = Json.newObject();
+        result.put("success", true);
+        return ok(result);
+    }
+
+    public Result processMessage() {
+        /*
+        Process an incoming message
+         */
+        JsonNode json = request().body().asJson();
+
+        // TODO construct Message class from json
+        String msgType = json.get("type").asText();
+        if(Objects.equals(msgType, "start_transaction")) {
+            return this.handleStartTransaction(json);
+        }
+        else {
+            ObjectNode result = Json.newObject();
+            result.put("success", false);
+            result.put("error", "cannot handle message type");
+            return ok(result);
+        }
+    }
+
+    public Result processAck() {
+        /*
+        Process an acknowledgement message
+         */
+        JsonNode json = request().body().asJson();
+        String msgId = json.get("msg_id").asText();
+
+        String signature = json.get("signature_b").asText();
+
+        // first check whether we have a pending message in the repository
+        Message msg = PendingMessageRepository.getInstance().getPendingMessage(msgId);
+        if(msg == null) {
+            ObjectNode result = Json.newObject();
+            result.put("success", false);
+            result.put("error", "cannot find pending message");
+            return ok(result);
+        }
+
+        // TODO add signature to message
+
+        // TODO Jason: add message to tendermint
 
         ObjectNode result = Json.newObject();
         result.put("success", true);
