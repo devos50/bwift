@@ -24,6 +24,7 @@ create table transaction (
   amount                        double not null,
   timestamp                     bigint not null,
   description                   varchar(255),
+  hash                          varchar(255),
   constraint pk_transaction primary key (id)
 );
 

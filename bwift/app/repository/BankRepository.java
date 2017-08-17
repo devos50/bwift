@@ -1,8 +1,5 @@
 package repository;
 
-import models.Bank;
-import models.BankAccount;
-
 import java.util.List;
 
 public class BankRepository {
