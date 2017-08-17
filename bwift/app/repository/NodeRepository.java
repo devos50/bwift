@@ -57,7 +57,7 @@ public class NodeRepository {
             // create some banks
             if(Node.find.all().size() == 0) {
                 instance.addNode("Maersk", true, "", "NL11NORD111111111", "127.0.0.1", 9000);
-                instance.addNode("Nordea", false, "NORD", "", "127.0.0.1", 9000);
+                instance.addNode("Nordea", false, "NORD", "", "127.0.0.1", 9001);
                 instance.addNode("Company", true, "", "NL11NORD111111111", "127.0.0.1", 9000);
             }
         }
