@@ -12,3 +12,7 @@ libraryDependencies += guice
 libraryDependencies ++= Seq(
 "mysql" % "mysql-connector-java" % "5.1.18"
 )
+
+libraryDependencies ++= Seq(
+  javaWs
+)

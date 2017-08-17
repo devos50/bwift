@@ -23,12 +23,12 @@ public class BankAccount extends Model {
         this.balance = 1000.0; // initial balance
     }
 
-    public void add(int toAdd) {
+    public void add(double toAdd) {
         assert toAdd > 0;
         this.balance += toAdd;
     }
 
-    public void subtract(int toSub) {
+    public void subtract(double toSub) {
         assert this.balance - toSub >= 0;
         this.balance -= toSub;
     }

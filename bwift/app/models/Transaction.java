@@ -25,6 +25,7 @@ public class Transaction extends Model {
     private String destinationAccount;
     private double amount;
     private long timestamp;
+    private String description;
 
     private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
 
@@ -39,12 +40,22 @@ public class Transaction extends Model {
         return sb.toString();
     }
 
-    public Transaction(String sourceAccount, String destinationAccount, double amount, long timestamp) {
+    public Transaction(String sourceAccount, String destinationAccount, double amount, long timestamp, String description) {
         this.id = this.generateId();
         this.sourceAccount = sourceAccount;
         this.destinationAccount = destinationAccount;
         this.amount = amount;
         this.timestamp = timestamp;
+        this.description = description;
+    }
+
+    public Transaction(String id, String sourceAccount, String destinationAccount, double amount, long timestamp, String description) {
+        this.id = id;
+        this.sourceAccount = sourceAccount;
+        this.destinationAccount = destinationAccount;
+        this.amount = amount;
+        this.timestamp = timestamp;
+        this.description = description;
     }
 
     public String getSourceAccount() {
@@ -63,6 +74,10 @@ public class Transaction extends Model {
         return this.timestamp;
     }
 
+    public String getDescription() {
+        return this.description;
+    }
+
     public static String bytesToHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
         for ( int j = 0; j < bytes.length; j++ ) {
@@ -75,7 +90,7 @@ public class Transaction extends Model {
 
     public String getHash() {
         try {
-            String txString = this.sourceAccount + "-" + this.destinationAccount + "-" + this.amount + "-" + this.timestamp;
+            String txString = this.sourceAccount + "-" + this.destinationAccount + "-" + this.amount + "-" + this.timestamp + "-" + this.description;
             byte[] bytesOfMessage = txString.getBytes("UTF-8");
             MessageDigest md = MessageDigest.getInstance("MD5");
             return Transaction.bytesToHex(md.digest(bytesOfMessage));
@@ -92,6 +107,7 @@ public class Transaction extends Model {
         json.put("destination", this.destinationAccount);
         json.put("amount", this.amount);
         json.put("timestamp", this.timestamp);
+        json.put("description", this.description);
         return json;
     }
 }
