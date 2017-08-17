@@ -3,6 +3,7 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import models.Message;
 import models.Node;
 import models.Transaction;
 import play.data.DynamicForm;
@@ -56,18 +57,24 @@ public class HomeController extends Controller {
         String customerName = json.get("customer_address").asText();
         String customerAddress = json.get("customer_address").asText();
 
-        // determine to which bank we need to send this message
-        Node bankNode = NodeRepository.getInstance().getBICNode(destinationAccount.substring(4, 8));
-        if(bankNode == null) {
+        // determine to which company we need to send the start_transaction message
+        Node companyNode = NodeRepository.getInstance().getCompanyNode(destinationAccount);
+        if(companyNode == null) {
             ObjectNode result = Json.newObject();
             result.put("success", false);
-            result.put("error", "destination bank account not found");
+            result.put("error", "final company node not found");
             return ok(result);
         }
 
         // create a new transaction and add it to the pending transactions
         Transaction tx = new Transaction();
         PendingTransactionRepository.getInstance().addPendingTransaction(tx);
+
+        // send a start_transaction message to the final company
+        Message start_tx_message = new Message();
+        // TODO add more data to it
+
+        ws.url("http://localhost:9000").post(start_tx_message.getJsonRepresentation());
 
         ObjectNode result = Json.newObject();
         result.put("success", true);

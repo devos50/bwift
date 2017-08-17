@@ -16,8 +16,8 @@ public class NodeRepository {
         // Exists only to defeat instantiation.
     }
 
-    private void addNode(String name, boolean isCompany, String identificationCode, String ipAddress, int port) {
-        Node newNode = new Node(name, isCompany, identificationCode, ipAddress, port);
+    private void addNode(String name, boolean isCompany, String identificationCode, String bankAccount, String ipAddress, int port) {
+        Node newNode = new Node(name, isCompany, identificationCode, bankAccount, ipAddress, port);
         newNode.save();
     }
 
@@ -28,9 +28,20 @@ public class NodeRepository {
     public Node getBICNode(String bic) {
         // return a node based on the bank identification code (used to lookup banks)
         List<Node> nodes = this.getNodes();
-        for(Node bank : nodes) {
-            if(bank.getIdentificationCode().equals(bic) && !bank.isCompany()) {
-                return bank;
+        for(Node node : nodes) {
+            if(node.getIdentificationCode().equals(bic) && !node.isCompany()) {
+                return node;
+            }
+        }
+        return null;
+    }
+
+    public Node getCompanyNode(String bankAccount) {
+        // return a node based on the bank account (used to lookup companies)
+        List<Node> nodes = this.getNodes();
+        for(Node node : nodes) {
+            if(node.getBankAccount().equals(bankAccount) && node.isCompany()) {
+                return node;
             }
         }
         return null;
@@ -42,9 +53,9 @@ public class NodeRepository {
 
             // create some banks
             if(Node.find.all().size() == 0) {
-                instance.addNode("Maersk", true, "", "127.0.0.1", 9000);
-                instance.addNode("Nordea", false, "NORD", "127.0.0.1", 9001);
-                instance.addNode("Company", true, "", "127.0.0.1", 9002);
+                instance.addNode("Maersk", true, "", "", "127.0.0.1", 9000);
+                instance.addNode("Nordea", false, "NORD", "NL11NORD111111111", "127.0.0.1", 9001);
+                instance.addNode("Company", true, "", "", "127.0.0.1", 9002);
             }
         }
         return instance;

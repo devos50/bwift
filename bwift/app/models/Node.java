@@ -17,14 +17,16 @@ public class Node extends Model {
     @Id
     private String name;
     private boolean isCompany; // true iff this node is a company, else false
-    private String identificationCode;
+    private String identificationCode; // banks should have an identification code
+    private String bankAccount; // companies should have a bank account
     private String ipAddress;
     private int port;
 
-    public Node(String name, boolean isCompany, String identificationCode, String ipAddress, int port) {
+    public Node(String name, boolean isCompany, String identificationCode, String bankAccount, String ipAddress, int port) {
         this.name = name;
         this.isCompany = isCompany;
         this.identificationCode = identificationCode;
+        this.bankAccount = bankAccount;
         this.ipAddress = ipAddress;
         this.port = port;
     }
@@ -41,6 +43,10 @@ public class Node extends Model {
         return this.identificationCode;
     }
 
+    public String getBankAccount() {
+        return this.bankAccount;
+    }
+
     public String getIpAddress() {
         return this.ipAddress;
     }
@@ -54,6 +60,7 @@ public class Node extends Model {
         json.put("name", this.name);
         json.put("is_company", this.isCompany);
         json.put("identification_code", this.identificationCode);
+        json.put("bank_account", this.bankAccount);
         json.put("ip_address", this.ipAddress);
         json.put("port", this.port);
         return json;
