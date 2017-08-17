@@ -1,6 +1,7 @@
 package repository;
 
 import models.Message;
+import play.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,14 +19,17 @@ public class PendingMessageRepository {
     }
 
     public void addPendingMessage(Message msg) {
+        Logger.debug("Adding pending message: " + msg.getId());
         pendingMessages.put(msg.getId(), msg);
     }
 
     public void removePendingMessage(String id) {
+        Logger.debug("Removing pending message: " + id);
         pendingMessages.remove(id);
     }
 
     public Message getPendingMessage(String id) {
+        Logger.debug("Looking for pending message: " + id);
         if(!pendingMessages.containsKey(id)) {
             return null;
         }

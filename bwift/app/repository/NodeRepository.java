@@ -1,6 +1,7 @@
 package repository;
 
 import models.Node;
+import play.Logger;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class NodeRepository {
     }
 
     public Node getBICNode(String bic) {
+        Logger.debug("Looking for bank with bic " + bic);
         // return a node based on the bank identification code (used to lookup banks)
         List<Node> nodes = this.getNodes();
         for(Node node : nodes) {
@@ -38,6 +40,7 @@ public class NodeRepository {
 
     public Node getCompanyNode(String bankAccount) {
         // return a node based on the bank account (used to lookup companies)
+        Logger.debug("Fetching company with bank account " + bankAccount);
         List<Node> nodes = this.getNodes();
         for(Node node : nodes) {
             if(node.getBankAccount().equals(bankAccount) && node.isCompany()) {
@@ -53,9 +56,9 @@ public class NodeRepository {
 
             // create some banks
             if(Node.find.all().size() == 0) {
-                instance.addNode("Maersk", true, "", "", "127.0.0.1", 9000);
-                instance.addNode("Nordea", false, "NORD", "NL11NORD111111111", "127.0.0.1", 9001);
-                instance.addNode("Company", true, "", "", "127.0.0.1", 9002);
+                instance.addNode("Maersk", true, "", "NL11NORD111111111", "127.0.0.1", 9000);
+                instance.addNode("Nordea", false, "NORD", "", "127.0.0.1", 9000);
+                instance.addNode("Company", true, "", "NL11NORD111111111", "127.0.0.1", 9000);
             }
         }
         return instance;

@@ -20,7 +20,7 @@ public class Transaction {
     }
 
     public String getTxid() {
-        return this.getTxid();
+        return this.txid;
     }
 
     public Transaction() {
