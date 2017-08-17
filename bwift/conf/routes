@@ -5,6 +5,7 @@
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
 GET     /nodes                   controllers.HomeController.getNodes
+GET     /transactions            controllers.HomeController.getTransactions
 POST    /transactions            controllers.HomeController.createTransaction
 POST    /msg                     controllers.HomeController.processMessage
 POST    /ack                     controllers.HomeController.processAck

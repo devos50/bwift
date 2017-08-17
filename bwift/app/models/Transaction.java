@@ -1,7 +1,10 @@
 package models;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.ebean.Finder;
 import io.ebean.Model;
+import play.libs.Json;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -68,5 +71,16 @@ public class Transaction extends Model {
 
     public String getCurrency() {
         return this.currency;
+    }
+
+    public JsonNode getJsonRepresentation() {
+        ObjectNode json = Json.newObject();
+        json.put("txid", this.txid);
+        json.put("complete", this.isComplete);
+        json.put("source", this.sourceAccount);
+        json.put("destination", this.destinationAccount);
+        json.put("amount", this.amount);
+        json.put("currency", this.currency);
+        return json;
     }
 }

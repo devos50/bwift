@@ -52,6 +52,17 @@ public class HomeController extends Controller {
         return ok(result);
     }
 
+    public Result getTransactions() {
+        ObjectNode result = Json.newObject();
+
+        ArrayNode array = result.putArray("transactions");
+        for(Transaction tx : Transaction.find.all()) {
+            array.add(tx.getJsonRepresentation());
+        }
+
+        return ok(result);
+    }
+
     private Result error(String msg) {
         Logger.error("Error when performing request: " + msg);
         ObjectNode result = Json.newObject();
